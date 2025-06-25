@@ -4,15 +4,8 @@
 ;
 ; This source code is released under the MIT license, see included license.txt.
 
-            macro       testname
-            db          "CCF"
-            endm
-
-maskflags   equ         0
-onlyflags   equ         1
-postccf     equ         1
-memptr      equ         0
-
-            include     main.asm
+            include     common_pre_48k_spectrum.asm
+            include     common_z80ccf.asm
+            include     common_post_48k_spectrum.asm
 
 ; EOF ;

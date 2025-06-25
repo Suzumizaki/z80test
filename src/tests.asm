@@ -148,7 +148,8 @@ testtable:
             dw      .cpd
             dw      .cpir
             dw      .cpdr
-            
+
+if io_compatible
             dw      .in_a_n
             dw      .in_r_c
             dw      .in_c
@@ -166,6 +167,7 @@ testtable:
             dw      .outd
             dw      .otir
             dw      .otdr
+endif
 
             dw      .jp_nn
             dw      .jp_cc_nn

@@ -4,8 +4,6 @@
 ;
 ; This source code is released under the MIT license, see included license.txt.
 
-            org     0x8000
-
 main:       di                                  ; disable interrupts
             push    iy                          ; preserve stuff needed by BASIC
             exx
@@ -63,7 +61,13 @@ main:       di                                  ; disable interrupts
             jr      .done
 
 .ok         call    print                       ; print success message
-            db      "all tests passed.",13,0
+            db      "all ", 0
+            
+            ld      a,c
+            call    printdeca
+            
+            call    print
+            db      " tests passed.",13,0
 
 .done       pop     hl                          ; return to BASIC
             exx
@@ -93,12 +97,15 @@ main:       di                                  ; disable interrupts
 
 .failcheck  or      b                           ; some prior failure means do the test
             jr      nz,.pass
-
+if !io_compatible
+.incheck
+endif
             call    print                       ; print that the test was skipped
             db      23,32-7,1,"Skipped",13,0
 
             ret                                 ; return success
 
+if io_compatible
 .incheck    xor     a                           ; expected IN value means do the test
             in      a,(0xfe)
             cp      0xbf                        ; %10111111 - just MIC bit is zero
@@ -118,6 +125,7 @@ main:       di                                  ; disable interrupts
 
             inc     a                           ; return failure
             ret
+endif
 
 .pass       ld      hl,1+3*vecsize              ; store expected CRC address
             add     hl,de
@@ -142,28 +150,9 @@ main:       di                                  ; disable interrupts
             ld      b,4                         ; compare CRCs
             call    .cmp
 
-            jr      nz,.mismatch                ; check for mismatch
+            jp      z,ok_print                  ; print ok and retunrn
 
-            call    print                       ; print success
-            db      23,32-2,1,"OK",13,0
-
-            ret                                 ; return success
-
-.mismatch   call    print                       ; print mismatched and expected CRC
-            db      23,32-6,1,"FAILED",13
-            db      "CRC:",0
-
-            call    printcrc
-
-            call    print
-            db      "   Expected:",0
-
-            ex      de,hl
-            call    printcrc
-
-            ld      a,13
-            call    printchr
-
+.mismatch   call    failed_print                ; print mismatched and expected CRC
             ld      a,1                         ; return failure
             ret
 
@@ -179,11 +168,10 @@ main:       di                                  ; disable interrupts
             pop     hl
             ret
 
-            include print.asm
-
             align   256
 
             include idea.asm
             include tests.asm
+            include print.asm
 
 ; EOF ;

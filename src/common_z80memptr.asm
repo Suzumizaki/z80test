@@ -7,8 +7,15 @@
 ;
 ; This source code is released under the MIT license, see included license.txt.
 
-            include     common_pre_48k_spectrum.asm
-            include     common_z80memptr.asm
-            include     common_post_48k_spectrum.asm
+            macro       testname
+            db          "MEMPTR"
+            endm
+
+maskflags   equ         0
+onlyflags   equ         1
+postccf     equ         0
+memptr      equ         1
+
+            include     main.asm
 
 ; EOF ;

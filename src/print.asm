@@ -5,10 +5,6 @@
 ; This source code is released under the MIT license, see included license.txt.
 
 
-printinit:  ld      a,2
-            jp      0x1601      ; CHAN-OPEN
-
-
 print:      ex      (sp),hl
             call    printhl
             ex      (sp),hl
@@ -38,7 +34,7 @@ printdeca:  ld      h,a
             sub     b
             ld      h,a
             ld      a,l
-            jr      printchr
+            jr      jp_printchr
 
 
 printcrc:   ld      b,4
@@ -63,20 +59,7 @@ printhexa:  push    af
             daa
             add     a,0xa0
             adc     a,0x40
-
-printchr:   push    iy
-            ld      iy,0x5c3a   ; ERR-NR
-            push    de
-            push    bc
-            exx
-            ei
-            ; out     (0xff),a
-            rst     0x10
-            di
-            exx
-            pop     bc
-            pop     de
-            pop     iy
-            ret
+jp_printchr:
+            jp      printchr
 
 ; EOF ;

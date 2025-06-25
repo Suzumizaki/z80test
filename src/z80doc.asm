@@ -4,15 +4,8 @@
 ;
 ; This source code is released under the MIT license, see included license.txt.
 
-            macro       testname
-            db          "doc"
-            endm
-
-maskflags   equ         1
-onlyflags   equ         0
-postccf     equ         0
-memptr      equ         0
-
-            include     main.asm
+            include     common_pre_48k_spectrum.asm
+            include     common_z80doc.asm
+            include     common_post_48k_spectrum.asm
 
 ; EOF ;

@@ -42,9 +42,11 @@ test:       ld      (.spptr+1),sp
             inc     de
 
             call    .copy
-            
+
+if io_compatible
             ld      a,0x07          ; Make sure we get 0
             out     (0xfe),a        ; on MIC bit when doing IN.
+endif
 
             ld      a,0xa9          ; Set I,R,AF' to known values.
             ld      i,a
@@ -264,7 +266,8 @@ test:       ld      (.spptr+1),sp
 ; If this moves from 0x8800, all tests which use this address
 ; will need to have their CRCs updated, so don't move it.
 
-            align   256
+            align   0x800
+            assert  data == 0x8800
 data
 .regs       ds      datasize-4
 .regstop
@@ -280,12 +283,15 @@ data
             jp      test.continue
 
 ; This entire workspace must be kept within single 256 byte page.
-
+            assert (start_of_corework >> 8) == ((end_of_corework - 1) >> 8)
+start_of_corework:
 vector      ds      vecsize
 counter     ds      vecsize
 countmask   ds      vecsize
 shifter     ds      1+vecsize
 shiftend
 shiftmask   ds      1+vecsize
+end_of_corework:
+
 
 ; EOF ;
