@@ -4,4 +4,5 @@ sjasm z80docflags.asm z80docflags.rom
 sjasm z80flags.asm z80flags.rom
 sjasm z80full.asm z80full.rom
 sjasm z80memptr.asm z80memptr.rom
+sjasm z80ccfscr.asm z80ccfscr.rom
 pause
